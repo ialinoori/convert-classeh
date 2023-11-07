@@ -1,8 +1,8 @@
-"use client"
+"use client";
 
 import React, { useState } from "react";
-import MultiSelectDropdown from "./_components/muilti-select-dropdown/multi-seclet-dropdown";
-import DatePickerr from "./_components/datepicker/datepicker";
+import MultiSelectDropdown from "../_components/muilti-select-dropdown/multi-seclet-dropdown";
+import DatePickerr from "../_components/datepicker/datepicker";
 
 const Page = () => {
   const [uploadedFiles, setUploadedFiles] = useState([]);
@@ -19,7 +19,10 @@ const Page = () => {
         <MultiSelectDropdown />
 
         <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="input1">
+          <label
+            className="block text-gray-700 text-sm font-bold mb-2"
+            htmlFor="input1"
+          >
             عنوان
           </label>
           <input
@@ -31,7 +34,10 @@ const Page = () => {
         </div>
 
         <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="input2">
+          <label
+            className="block text-gray-700 text-sm font-bold mb-2"
+            htmlFor="input2"
+          >
             متن
           </label>
           <input
@@ -43,7 +49,10 @@ const Page = () => {
         </div>
 
         <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="fileInput">
+          <label
+            className="block text-gray-700 text-sm font-bold mb-2"
+            htmlFor="fileInput"
+          >
             آپلود فایل‌ها
           </label>
           <input
@@ -59,7 +68,7 @@ const Page = () => {
             ))}
           </ul>
         </div>
-        <DatePickerr />
+        <DatePickerr/>
       </form>
     </div>
   );
