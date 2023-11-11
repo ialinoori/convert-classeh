@@ -1,12 +1,9 @@
-"use client"
-import { useRouter } from 'next/navigation';
-import React, { useEffect } from 'react';
+import React from 'react';
 
 const page = () => {
-
   return (
     <div>
-      داشبرددددددددددددددد
+      main
       
     </div>
   );

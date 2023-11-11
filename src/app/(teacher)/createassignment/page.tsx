@@ -68,7 +68,7 @@ const Page = () => {
             ))}
           </ul>
         </div>
-        <DatePickerr/>
+        <DatePickerr />
       </form>
     </div>
   );

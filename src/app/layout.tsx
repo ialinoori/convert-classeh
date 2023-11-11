@@ -1,7 +1,32 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import Footer from "./_components/footer/footer";
+import {Figtree} from "next/font/google";
+import localFont from "next/font/local"
+
+
+const figtree  = Figtree({
+  display:"swap",
+  subsets:["latin"],
+  weight:["300","400","500","600","700","800","900"],
+  variable:"--font-figtree"
+})
+
+// const yekanbakh = localFont({
+//   src:[
+//     {
+//       path:"https://assets.edu-world.ir/fonts/iransans/v8/Webfonts/fonts/woff/IRANSansX-Thin.woff",
+//       weight:"100",
+//       style:"normal"
+
+//     },
+    
+//   ],
+//   variable:"--font-yekanbakh"
+
+// })
+
+
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,7 +41,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="fa" dir="rtl">
+    <html lang="fa" dir="rtl" className={`${figtree.variable} `}>
       <body className={inter.className}>{children}</body>
     </html>
   );

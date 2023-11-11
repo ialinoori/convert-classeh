@@ -69,7 +69,7 @@ const MultiSelectDropdown = ({ onChange, newOptionId }) => {
   };
 
   return (
-    <div className="relative mb-4 w-full" ref={dropdownRef}>
+    <div className="relative z-50 mb-4 w-full" ref={dropdownRef}>
       <div
         className={`w-full bg-white border border-[#D9D9D9] rounded-[2px] shadow-sm cursor-pointer focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 sm:text-sm ${
           selectedClasses.length > 0 ? "pt-6 pb-2" : "py-3 px-4"

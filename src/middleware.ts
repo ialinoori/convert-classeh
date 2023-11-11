@@ -8,12 +8,12 @@ export function middleware(request: NextRequest) {
   console.log(cookie);
 
 
-  // if (pathname === "/login" && !request.nextUrl.searchParams.get("AppName")) {
+  if (pathname === "/login" && !request.nextUrl.searchParams.get("AppName")) {
     
-  //   const newUrl = new URL(url);
-  //   newUrl.searchParams.set("AppName", "mohammadfarhadi.classeh.ir");
-  //   return NextResponse.redirect(newUrl.href);
-  // }
+    const newUrl = new URL(url);
+    newUrl.searchParams.set("AppName", "mohammadfarhadi.classeh.ir");
+    return NextResponse.redirect(newUrl.href);
+  }
 
  
   if (pathname === "/" && !cookie) {

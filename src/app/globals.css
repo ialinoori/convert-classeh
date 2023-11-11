@@ -2,28 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+@font-face {
+  font-family: IranSansX;
+  font-style: normal;
+  src: url('https://assets.edu-world.ir/fonts/iransans/v8/Webfonts/fonts/woff/IRANSansX-Thin.woff') format(woff),
+  url('https://assets.edu-world.ir/fonts/iransans/v8/Webfonts/fonts/woff2/IRANSansX-Thin.woff2') format(woff2)
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
-}
 
-body {
-  /* color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb)); */
+
+:lang(en){
+  font-family: var(--font-figtree);
 }
 
 .modal {
@@ -39,12 +28,90 @@ body {
   z-index: 1000;
 }
 
-/* Adjust the width as needed */
 .modal-content {
   background-color: white;
-  width: 70%; /* Adjust the width here (e.g., 70%) */
+  width: 70%; 
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
 }
+
+
+.relative {
+  position: relative;
+}
+
+.input-container{
+  width: 350px;
+}
+
+.entryarea{
+  position: relative;
+  height: 48px;
+  line-height: 48px;
+}
+
+.input{
+  position: absolute;
+  width: 100%;
+  outline: none;
+  font-size: 16px;
+  padding: 0 10px;
+  line-height: 48px;
+  border-radius: 8px;
+  border :1px solid #9A9A9A;
+  background: transparent;
+  transition:0.1s ease ;
+  z-index: 1111;
+  
+}
+
+.labelline{
+  position: absolute;
+  font-size: 16px;
+  color: #9A9A9A;
+  padding: 0 10px;
+  margin: 0 20px;
+  background-color:white ;
+  transition:0.2s ease ;
+}
+
+.input:focus,
+.input:valid{
+  color: #0A4471;
+  border: 2px solid #0A4471;
+
+}
+
+.input.error {
+  border-color: #FF4F4F;
+}
+
+.labelline.error {
+  color: #FF4F4F;
+}
+
+.input:focus + .labelline,
+.input:valid + .labelline{
+  color: #0A4471;
+  height: 30px;
+  line-height: 30px;
+  transform: translate(-15px,-16px) scale(0.88);
+  z-index: 1111;
+
+}
+
+.input.error:focus + .labelline.errro,
+.input.error:valid + .labelline.error{
+  color: #FF4F4F;
+  height: 30px;
+  line-height: 30px;
+  transform: translate(-15px,-16px) scale(0.88);
+  z-index: 1111;
+
+}
+
+
+
+
 
