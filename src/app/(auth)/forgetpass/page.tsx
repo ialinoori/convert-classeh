@@ -7,6 +7,7 @@ import Input from "../../_components/input/input";
 import Image from "next/image";
 import { useFormState } from "react-dom";
 import forgetPassWordAction from "./actions";
+import { useSearchParams } from "next/navigation";
 
 const PasswordResetForm = () => {
   const [formData, setFormData] = useState({
@@ -14,9 +15,12 @@ const PasswordResetForm = () => {
   });
   const [isLoading, setIsLoading] = useState(false);
 
+  const search = useSearchParams();
+  const appName = search.get("AppName") ?? "";
+
   const { username } = formData;
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: any) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
@@ -24,21 +28,39 @@ const PasswordResetForm = () => {
     });
   };
 
-  const initialState = {
-    error: false,
-    success: false,
-    response: null,
-  };
 
-  const [state, formAction] = useFormState(forgetPassWordAction, initialState);
 
-  useEffect(() => {
-    if (state.error) {
-      toast.error(state.response.message);
-    } else if (state.success) {
-      toast.success(state.response.message);
+  const handleFormSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      setIsLoading(true);
+
+      const response = await fetch(`https://${appName}/schoolservice/smsForgetPass`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const responseData = await response.json();
+
+      console.log(responseData);
+
+      if (responseData.result_type === "success") {
+        toast.success(responseData.message);
+        // You can add any additional logic here
+      } else {
+        toast.error(responseData.message);
+      }
+    } catch (error) {
+      console.error("Error during password reset:", error);
+      toast.error("An unexpected error occurred. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
-  }, [state]);
+  };
 
   return (
     <div className="flex justify-center items-center h-screen">
@@ -48,22 +70,23 @@ const PasswordResetForm = () => {
           src="/images/logo.svg"
           width={60}
           height={60}
+          alt=""
         />
         <h1 className="text-center mb-4 text-[16px] font-bold">
           ورود به مدرسه منتخب
         </h1>
 
-        <form action={formAction}>
+        <form onSubmit={handleFormSubmit}>
           <div className="w-full py-2 flex items-center justify-center">
             <div className="flex flex-col gap-y-6">
-              <Input
-                label="نام کاربری"
-                type="text"
-                name="username"
-                value={username}
-                onChange={handleInputChange}
-                required="true"
-              />
+            <Input
+              label="نام کاربری"
+              type="text"
+              name="username"
+              value={username}
+              onChange={handleInputChange}
+              required="true"
+            />
             </div>
           </div>
 

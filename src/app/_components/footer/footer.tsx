@@ -1,14 +1,13 @@
-
-"use client"
+"use client";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
 
 const menuItems = [
-  { title: " خانه", href: "/" },
-  { title: "  معلم ", href: "/createassignment" },
-  { title: " دانش آموز ", href: "/assignmentstu" },
+  { title: " پروفایل", href: "/dashboard/profile" },
+  { title: "  خانه ", href: "/" },
+  { title: " تنظیمات  ", href: "/" },
 ];
 
 const Footer = () => {
@@ -16,13 +15,16 @@ const Footer = () => {
   return (
     <div className="bg-cyan-600 px-12 w-full h-16 fixed bottom-0">
       <div className="flex justify-between  items-center h-full">
-        {menuItems.map((item) => {
+        {menuItems.map((item, index) => {
           const isActive = pathname === item.href;
           return (
-            <Link   className={`text-white transition-colors pb-2 ${
-              isActive &&
-              "border-b-2 text-black  border-black"
-            }`} href={item.href}>
+            <Link
+              key={index}
+              className={`text-white transition-colors pb-2 ${
+                isActive && "border-b-2 text-black  border-black"
+              }`}
+              href={item.href}
+            >
               {item.title}
             </Link>
           );

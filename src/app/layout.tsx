@@ -41,7 +41,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="fa" dir="rtl" className={`${figtree.variable} `}>
+    <html lang="fa-IR" dir="rtl" className={`${figtree.variable} `}>
       <body className={inter.className}>{children}</body>
     </html>
   );

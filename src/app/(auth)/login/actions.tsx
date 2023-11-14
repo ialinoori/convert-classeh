@@ -1,9 +1,11 @@
 "use server";
 import { cookies } from "next/headers";
 
-const createAccount = async (prve: any, formData: FormData) => {
-  const username = formData.get("username");
-  const password = formData.get("password");
+const createAccount = async (appName: string, formData: FormData) => {
+  console.log(appName);
+
+  const username = formData?.get("username");
+  const password = formData?.get("password");
 
   const data = {
     username,

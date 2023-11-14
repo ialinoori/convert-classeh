@@ -7,15 +7,24 @@ import { useFormState } from "react-dom";
 import createAccount from "./actions";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import Cookies from 'js-cookie';
 
-const page = () => {
+
+const LoginPage = () => {
   const router = useRouter();
+
   const [formData, setFormData] = useState({
     username: "",
     password: "",
   });
   const [usernameError, setUsernameError] = useState("");
   const { username, password } = formData;
+
+  const search = useSearchParams();
+  const appName = search.get("AppName") ?? "";
+
+  console.log(appName);
 
   const handleInputChange = (e: any) => {
     const { name, value } = e.target;
@@ -32,22 +41,44 @@ const page = () => {
       [name]: value,
     });
   };
-  const initialState = {
-    error: false,
-    success: false,
-    response: null,
+
+  const handleFormSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      const response = await fetch(`https://${appName}/user/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const responseData = await response.json();
+
+      console.log(responseData);
+
+      if(responseData.result_type === "success"){
+        toast.success(responseData.message)
+        Cookies.set('token', responseData.data.token, { expires: 7 }); 
+        localStorage.setItem("userData",JSON.stringify(responseData.data))
+        router.push("/createassignment")
+
+      }else{
+        toast.error(responseData.message)
+      }
+      
+
+    
+    } catch (error) {
+      console.error("Error during login:", error);
+      toast.error("An unexpected error occurred. Please try again.");
+    }
   };
 
-  const [state, formAction] = useFormState(createAccount, initialState);
 
-  useEffect(() => {
-    if (state.error) {
-      toast.error(state.response.message);
-    } else if (state.success) {
-      toast.success(state.response.message);
-      router.push("/createassignment");
-    }
-  }, [state]);
+
+
 
   return (
     <div className="flex justify-center items-center h-screen">
@@ -63,7 +94,7 @@ const page = () => {
           ورود به مدرسه منتخب
         </h1>
 
-        <form action={formAction} method="POST">
+        <form  onSubmit={handleFormSubmit}>
           <div className="w-full py-2 flex items-center justify-center">
             <div className="flex flex-col gap-y-6">
               <Input
@@ -111,4 +142,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default LoginPage;

@@ -3,10 +3,123 @@
 @tailwind utilities;
 
 @font-face {
-  font-family: IranSansX;
-  font-style: normal;
-  src: url('https://assets.edu-world.ir/fonts/iransans/v8/Webfonts/fonts/woff/IRANSansX-Thin.woff') format(woff),
-  url('https://assets.edu-world.ir/fonts/iransans/v8/Webfonts/fonts/woff2/IRANSansX-Thin.woff2') format(woff2)
+	font-family: IRANSansX;
+	font-style: normal;
+	font-weight: 100;
+	src: url('https://assets.edu-world.ir/fonts/iransans/v8/Webfonts/fonts/woff/IRANSansX-Thin.woff') format('woff'),
+		url('https://assets.edu-world.ir/fonts/iransans/v8/Webfonts/fonts/woff2/IRANSansX-Thin.woff2') format('woff2');
+}
+
+@font-face {
+	font-family: IRANSansX;
+	font-style: normal;
+	font-weight: 200;
+	src: url('https://assets.edu-world.ir/fonts/iransans/v8/Webfonts/fonts/woff/IRANSansX-UltraLight.woff') format('woff'),
+		url('https://assets.edu-world.ir/fonts/iransans/v8/Webfonts/fonts/woff2/IRANSansX-UltraLight.woff2') format('woff2');
+}
+
+@font-face {
+	font-family: IRANSansX;
+	font-style: normal;
+	font-weight: 300;
+	src: url('https://assets.edu-world.ir/fonts/iransans/v8/Webfonts/fonts/woff/IRANSansX-Light.woff') format('woff'),
+		url('https://assets.edu-world.ir/fonts/iransans/v8/Webfonts/fonts/woff2/IRANSansX-Light.woff2') format('woff2');
+}
+
+@font-face {
+	font-family: IRANSansX;
+	font-style: normal;
+	font-weight: 500;
+	src: url('https://assets.edu-world.ir/fonts/iransans/v8/Webfonts/fonts/woff/IRANSansX-Medium.woff') format('woff'),
+		url('https://assets.edu-world.ir/fonts/iransans/v8/Webfonts/fonts/woff2/IRANSansX-Medium.woff2') format('woff2');
+}
+
+@font-face {
+	font-family: IRANSansX;
+	font-style: normal;
+	font-weight: 600;
+	src: url('https://assets.edu-world.ir/fonts/iransans/v8/Webfonts/fonts/woff/IRANSansX-DemiBold.woff') format('woff'),
+		url('https://assets.edu-world.ir/fonts/iransans/v8/Webfonts/fonts/woff2/IRANSansX-DemiBold.woff2') format('woff2');
+}
+
+@font-face {
+	font-family: IRANSansX;
+	font-style: normal;
+	font-weight: 800;
+	src: url('https://assets.edu-world.ir/fonts/iransans/v8/Webfonts/fonts/woff/IRANSansX-ExtraBold.woff') format('woff'),
+		url('https://assets.edu-world.ir/fonts/iransans/v8/Webfonts/fonts/woff2/IRANSansX-ExtraBold.woff2') format('woff2');
+}
+
+@font-face {
+	font-family: IRANSansX;
+	font-style: normal;
+	font-weight: 900;
+	src: url('https://assets.edu-world.ir/fonts/iransans/v8/Webfonts/fonts/woff/IRANSansX-Black.woff') format('woff'),
+		url('https://assets.edu-world.ir/fonts/iransans/v8/Webfonts/fonts/woff2/IRANSansX-Black.woff2') format('woff2');
+}
+
+@font-face {
+	font-family: IRANSansX;
+	font-style: normal;
+	font-weight: 950;
+	src: url('https://assets.edu-world.ir/fonts/iransans/v8/Webfonts/fonts/woff/IRANSansX-ExtraBlack.woff') format('woff'),
+		url('https://assets.edu-world.ir/fonts/iransans/v8/Webfonts/fonts/woff2/IRANSansX-ExtraBlack.woff2') format('woff2');
+}
+
+@font-face {
+	font-family: IRANSansX;
+	font-style: normal;
+	font-weight: 1000;
+	src: url('https://assets.edu-world.ir/fonts/iransans/v8/Webfonts/fonts/woff/IRANSansX-Heavy.woff') format('woff'),
+		url('https://assets.edu-world.ir/fonts/iransans/v8/Webfonts/fonts/woff2/IRANSansX-Heavy.woff2') format('woff2');
+}
+
+@font-face {
+	font-family: IRANSansX;
+	font-style: normal;
+	font-weight: bold;
+	src: url('https://assets.edu-world.ir/fonts/iransans/v8/Webfonts/fonts/woff/IRANSansX-Bold.woff') format('woff'),
+		url('https://assets.edu-world.ir/fonts/iransans/v8/Webfonts/fonts/woff2/IRANSansX-Bold.woff2') format('woff2');
+}
+
+@font-face {
+	font-family: IRANSansX;
+	font-style: normal;
+	font-weight: normal;
+	src: url('https://assets.edu-world.ir/fonts/iransans/v8/Webfonts/fonts/woff/IRANSansX-Regular.woff') format('woff'),
+		url('https://assets.edu-world.ir/fonts/iransans/v8/Webfonts/fonts/woff2/IRANSansX-Regular.woff2') format('woff2');
+}
+
+.fa_num {
+	-moz-font-feature-settings: "ss02";
+	-webkit-font-feature-settings: "ss02";
+	font-feature-settings: "ss02";
+}
+
+
+body:lang(fa-IR) {
+	font-family: IRANSansX, tahoma, Segoe UI, Roboto, Oxygen, Helvetica Neue, sans-serif !important;
+	direction: rtl;
+}
+
+h1:lang(fa-IR),
+h2:lang(fa-IR),
+h3:lang(fa-IR),
+h4:lang(fa-IR),
+h5:lang(fa-IR),
+h6:lang(fa-IR),
+input:lang(fa-IR),
+textarea:lang(fa-IR) {
+	font-family: IRANSansX !important;
+}
+
+h1:lang(fa-IR) {
+	font-weight: bold;
+}
+
+:lang(fa){
+  font-family: 
+
 }
 
 

@@ -5,18 +5,29 @@ export function middleware(request: NextRequest) {
   const url = request.url;
   const pathname = request.nextUrl.pathname;
   let cookie = request.cookies.get("token")?.value;
-  console.log(cookie);
 
+  // if (pathname === "/login" && !request.nextUrl.searchParams.get("AppName")) {
+  //   const newUrl = new URL(url);
+  //   newUrl.searchParams.set("AppName", "mohammadfarhadi.classeh.ir");
+  //   return NextResponse.redirect(newUrl.href);
+  // }
 
-  if (pathname === "/login" && !request.nextUrl.searchParams.get("AppName")) {
-    
-    const newUrl = new URL(url);
-    newUrl.searchParams.set("AppName", "mohammadfarhadi.classeh.ir");
-    return NextResponse.redirect(newUrl.href);
+  
+  // if (pathname === "/forgetpass" && !request.nextUrl.searchParams.get("AppName")) {
+  //   const newUrl = new URL(url);
+  //   newUrl.searchParams.set("AppName", "mohammadfarhadi.classeh.ir");
+  //   return NextResponse.redirect(newUrl.href);
+  // }
+
+  if (pathname === "/" && !cookie) {
+    return NextResponse.redirect(new URL("/login", url));
   }
 
- 
-  if (pathname === "/" && !cookie) {
+  if (pathname === "/login" && cookie) {
+    return NextResponse.redirect(new URL("/", url));
+  }
+
+  if (pathname === "/createassignment" && !cookie) {
     return NextResponse.redirect(new URL("/login", url));
   }
 

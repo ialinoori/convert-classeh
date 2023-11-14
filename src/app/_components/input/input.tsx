@@ -1,4 +1,16 @@
-const Input = ({
+interface InputProps {
+  label: string;
+  type?: string;
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  name: string;
+  required?: any;
+  multiple?: boolean; // Make it optional by adding a question mark
+  error?: string;
+}
+
+
+const Input: React.FC<InputProps> = ({
   label,
   type="text",
   value,
@@ -8,24 +20,7 @@ const Input = ({
   multiple,
   error,
 }) => {
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
 
-    if (name === "username") {
-      const regex = /^[a-zA-Z0-9]+$/; // Allow only alphanumeric characters
-
-      if (!regex.test(value)) {
-        setUsernameError("نام کاربری فقط می تواند شامل حروف و اعداد باشد.");
-      } else {
-        setUsernameError("");
-      }
-    }
-
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
 
   return (
     <div className="input-container">
