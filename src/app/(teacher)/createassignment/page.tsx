@@ -6,6 +6,7 @@ import DatePickerr from "../_components/datepicker/datepicker";
 import axios from "axios";
 import { Multiselect } from "multiselect-react-dropdown";
 import Modal from "../../_components/modal/modal";
+import toast from "react-hot-toast";
 
 const Page = () => {
   const [uploadedFiles, setUploadedFiles] = useState([]);
@@ -19,6 +20,8 @@ const Page = () => {
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [selectedUnix, setSelectedUnix] = useState(null); // Initialize with null or any default value
   const [uploadedFileUrls, setUploadedFileUrls] = useState([]);
+  const [isUploading, setIsUploading] = useState(false);
+
 
 
 
@@ -100,6 +103,7 @@ const Page = () => {
   };
 
   const handleFileUpload = async (files) => {
+    setIsUploading(true);
   const base64Files = [];
 
   for (let i = 0; i < files.length; i++) {
@@ -139,8 +143,10 @@ const Page = () => {
     console.log("Upload response:", response.data);
     setUploadedFileUrls(response.data);
     // Handle the response as needed
+    setIsUploading(false);
   } catch (error) {
     console.error("Upload error:", error);
+    setIsUploading(false);
     // Handle the error gracefully
   }
 };
@@ -184,6 +190,12 @@ const handleSubmit = async () => {
     );
 
     console.log("Assignment submission response:", response.data);
+    if(response.data.result_type === "success") {
+
+      toast.success(response.data.message)
+    }else{
+      toast.error("err")
+    }
     // Handle the response as needed
 
     // Assuming you might want to reset form fields and states after successful submission
@@ -201,73 +213,84 @@ const handleSubmit = async () => {
 
 
 
-  return (
-    <div className="container mx-auto my-16">
-      <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-        {/* <MultiSelectDropdown options={categorylist.options} /> */}
-        <Multiselect
-          options={categorylist.options}
-          placeholder="کلاس درس"
-          displayValue="name"
-          onSelect={onSelect}
-          onRemove={onRemove}
-        />
+return (
+  <div className="container mx-auto my-16">
+    <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+      {/* Multiselect dropdown */}
+      <Multiselect
+        options={categorylist.options}
+        placeholder="کلاس درس"
+        displayValue="name"
+        onSelect={onSelect}
+        onRemove={onRemove}
+        className="border border-gray-300 rounded-md p-2 mb-4"
+      />
 
-        {list.map((option) => (
-          <div className="bg-slate-500 flex items-center justify-between p-4">
-            <div>
-              <p className="font-bold text-xl">{option.nameCourse}</p>
-              <p>{option.nameClass}</p>
-            </div>
-            <div>
-              <button
-                onClick={() => handleClickOpen(option)}
-                className="bg-blue-400 text-white p-2 rounded-md"
-              >
-                انتخاب دانش اموز
-              </button>
-            </div>
+      {/* Display selected classes */}
+      {list.map((option) => (
+        <div key={option.mainID} className="bg-gray-100 flex items-center justify-between p-4 mb-2">
+          <div>
+            <p className="font-bold text-xl">{option.nameCourse}</p>
+            <p>{option.nameClass}</p>
           </div>
-        ))}
-
-        <Modal
-          isOpen={isModalOpen}
-          onClose={handleCloseModal}
-          users={listuser}
-          selectedUsers={selectedUsers}
-          setSelectedUsers={setSelectedUsers}
-        />
-
-        <div>
-          <input
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder="title"
-            className="border border-slate-500 p-2 rounded-md"
-          />
-          <input
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="description"
-            className="border border-slate-500 p-2 rounded-md"
-          />
+          <div>
+            <button
+              onClick={() => handleClickOpen(option)}
+              className="bg-blue-400 text-white p-2 rounded-md"
+            >
+              انتخاب دانش اموز
+            </button>
+          </div>
         </div>
-      </div>
-      <DatePickerr handleDateChange={handleDateChange}  />
+      ))}
 
+      {/* Modal for selecting users */}
+      <Modal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        users={listuser}
+        selectedUsers={selectedUsers}
+        setSelectedUsers={setSelectedUsers}
+      />
+
+      {/* Title and Description inputs */}
+      <div className="flex flex-wrap mb-6">
+        <input
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          placeholder="Title"
+          className="border border-gray-300 p-2 rounded-md w-full mb-4"
+        />
+        <input
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          placeholder="Description"
+          className="border border-gray-300 p-2 rounded-md w-full"
+        />
+      </div>
+
+      {/* Date picker */}
+      <DatePickerr handleDateChange={handleDateChange} />
+
+      {/* File upload */}
       <input
-  type="file"
-  multiple
-  onChange={(e) => handleFileUpload(e.target.files)}
-/>
+        type="file"
+        multiple
+        onChange={(e) => handleFileUpload(e.target.files)}
+        className="mt-4"
+      />
+
+      {/* Submit button */}
       <button
-        onClick={handleSubmit}
-        className="bg-blue-600 w-full p-4 rounded-md text-white"
-      >
-        submit
-      </button>
+  onClick={handleSubmit}
+  className={`bg-blue-600 w-full p-4 rounded-md text-white mt-4 ${isUploading ? 'opacity-50 cursor-not-allowed' : ''}`}
+  disabled={isUploading}
+>
+  {isUploading ? 'در حال اپلود فایل ها' : 'ایجاد تکلیف'}
+</button>
     </div>
-  );
+  </div>
+);
 };
 
 export default Page;

@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import '../globals.css'
 import Footer from '../_components/footer/footer'
+import { Toaster } from 'react-hot-toast'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -18,6 +19,7 @@ export default function TeatureLayout({
   return (
     <html lang="fa" dir='rtl'>
       <body className={inter.className}>
+      <Toaster/>
         {children}
         <Footer/>
         </body>
