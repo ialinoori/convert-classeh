@@ -10,33 +10,42 @@ import toast from "react-hot-toast";
 
 const Page = () => {
   const [uploadedFiles, setUploadedFiles] = useState([]);
-  const [categorylist, setCcategorylist] = useState([]);
-  const [list, setList] = useState([]);
+  const [categorylist, setCcategorylist] = useState<any>([]);
+  const [list, setList] = useState<any>([]);
   const [course, setCourse] = useState(0);
   const [listuser, setListuser] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [selectedUsers, setSelectedUsers] = useState([]);
-  const [selectedUnix, setSelectedUnix] = useState(null); // Initialize with null or any default value
+  const [selectedUnix, setSelectedUnix] = useState<any>(null); // Initialize with null or any default value
   const [uploadedFileUrls, setUploadedFileUrls] = useState([]);
   const [isUploading, setIsUploading] = useState(false);
 
 
 
 
-  const Category = { options: [] };
+  const Category :any = { options: [] };
 
-  const userData = localStorage.getItem("userData");
+  // const userData = localStorage.getItem("userData") as string;
+  const [userData, setUserData] = useState<string>("");
+  const token = userData ? JSON.parse(userData)?.token : null;
 
+  useEffect(() => {
+    if (!userData) {
+      setUserData(localStorage.getItem("userData") || "");
+    }
+  }, []);
+  
   const headersAcademic = {
-    Authorization: JSON.parse(userData)?.token,
+    Authorization: token,
   };
-  const now = parseInt(Date.now() / 1000);
+  const now = (Date.now() / 1000) as number
   const time = now;
 
   useEffect(() => {
-    const url = `/api/v3/Course_class?$filter={"andX":[{"eq": {"user.id":${1563}} },{"andX":[{"gt":{"school_class.academic_year.end_date":"${time}"}},{"lt":{"school_class.academic_year.start_date":"${time}"}}]}]}&$join=user,course,school_class,school_class.academic_year&$select=course.title,school_class.title`;
+   if(userData){
+     const url = `/api/v3/Course_class?$filter={"andX":[{"eq": {"user.id":${1563}} },{"andX":[{"gt":{"school_class.academic_year.end_date":"${time}"}},{"lt":{"school_class.academic_year.start_date":"${time}"}}]}]}&$join=user,course,school_class,school_class.academic_year&$select=course.title,school_class.title`;
     axios
       .get(`https://mohammadfarhadi.classeh.ir/${url}`, {
         headers: headersAcademic,
@@ -61,20 +70,21 @@ const Page = () => {
         setCcategorylist(Category);
       })
       .catch((error) => {});
-  }, []);
+   }
+  }, [userData]);
 
-  const onSelect = (selectedList, selectedItem) => {
-    setList((prevState) => [...prevState, selectedItem]);
+  const onSelect = (selectedList:any, selectedItem:any) => {
+    setList((prevState:any) => [...prevState, selectedItem]);
   };
 
-  const onRemove = (selectedList, removedItem) => {
+  const onRemove = (selectedList:any, removedItem:any) => {
     setList([]);
-    selectedList.map((option) =>
-      setList((prevState) => [...prevState, option])
+    selectedList.map((option:any) =>
+      setList((prevState:any) => [...prevState, option])
     );
   };
 
-  const handleClickOpen = (data) => {
+  const handleClickOpen = (data:any) => {
     setCourse(data.mainID);
 
     const url = `api/v3/school_class?$filter={"eq":{"id":${data.id}} }&$join=users&$orderby=id&$ordertype=desc&$select=users.first_name,users.last_name,title`;
@@ -96,30 +106,32 @@ const Page = () => {
     setIsModalOpen(false);
   };
 
-  const handleDateChange = (selectedDate) => {
+  const handleDateChange = (selectedDate:any) => {
     const unixTimestamp = selectedDate.valueOf() / 1000; // Convert milliseconds to seconds
     console.log("Selected date Unix timestamp:", unixTimestamp);
     setSelectedUnix(unixTimestamp)
   };
 
-  const handleFileUpload = async (files) => {
+  const handleFileUpload = async (files:any) => {
     setIsUploading(true);
-  const base64Files = [];
+    const base64Files: string[] = [];
 
-  for (let i = 0; i < files.length; i++) {
-    const file = files[i];
-    const reader = new FileReader();
-
-    reader.onload = (e) => {
-      const base64Match = e.target.result.match(/^data:(.*;base64,)?(.*)$/);
-      if (base64Match && base64Match.length >= 3) {
-        const base64WithPrefix = `data:${file.type};base64,${base64Match[2]}`;
-        base64Files.push(base64WithPrefix); // Include the prefix in the base64 string
-      }
-    };
-
-    reader.readAsDataURL(file);
-  }
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      const reader = new FileReader();
+  
+      reader.onload = (e: ProgressEvent<FileReader>) => {
+        if (e.target && e.target.result) {
+          const base64Match = e.target.result.toString().match(/^data:(.*;base64,)?(.*)$/);
+          if (base64Match && base64Match.length >= 3) {
+            const base64WithPrefix = `data:${file.type};base64,${base64Match[2]}`;
+            base64Files.push(base64WithPrefix);
+          }
+        }
+      };
+  
+      reader.readAsDataURL(file);
+    }
 
   try {
     // Simulate a delay due to asynchronous file reading
@@ -152,10 +164,10 @@ const Page = () => {
 };
 
 const handleSubmit = async () => {
-  const receivers = list.map((item) => ({
+  const receivers = list.map((item:any) => ({
     Course_class: {
       id: item.mainID.toString(),
-      users: selectedUsers.map((userId) => ({ id: userId.toString() })),
+      users: selectedUsers.map((userId:any) => ({ id: userId.toString() })),
     },
   }));
 
@@ -227,7 +239,7 @@ return (
       />
 
       {/* Display selected classes */}
-      {list.map((option) => (
+      {list.map((option:any) => (
         <div key={option.mainID} className="bg-gray-100 flex items-center justify-between p-4 mb-2">
           <div>
             <p className="font-bold text-xl">{option.nameCourse}</p>

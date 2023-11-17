@@ -3,20 +3,41 @@ import axios from "axios";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import moment from "moment-jalaali"; // Correct import for moment-jalaali
+import toast from "react-hot-toast";
 
-const AnsAssignmentModaldal = ({ isOpen, onClose, userId }) => {
-  const userData = localStorage.getItem("userData");
+const AnsAssignmentModaldal = ({ isOpen, onClose, userId }:any) => {
+  const userData = localStorage.getItem("userData") as string;
   const [teacherOpinion, setTeacherOpinion] = useState(""); // State for teacher's opinion
   const [teacherDescription, setTeacherDescription] = useState(""); // State for teacher's description
-
   const [uploadedFileUrls, setUploadedFileUrls] = useState([]);
-
-  const [data, setData] = useState();
-
+  const [data, setData] = useState<any>();
   const headersAcademic = {
     "Content-Type": "application/json",
     Authorization: JSON.parse(userData).token,
   };
+  const extractDescriptionAndLink = (textWithLink:any) => {
+    const regex = /(.+?)_file_(.+)/; // Regular expression to match any text before '_file_' and anything after it
+    const match = textWithLink.match(regex);
+
+    if (match && match.length >= 3) {
+      const description = match[1]; // Extracted description
+      const link = match[2]; // Extracted link
+      return { description, link };
+    } else {
+      return { description: "", link: "" }; // Return empty values if the structure doesn't match
+    }
+  };
+
+  useEffect(() => {
+    // Use the function to extract description and link from teacher_descs
+    const { description, link } =
+      data && data[0]?.teacher_descs
+        ? extractDescriptionAndLink(data[0]?.teacher_descs)
+        : { description: "", link: "" };
+
+    // ... rest of your code using description and link ...
+  }, [data]);
+
   const params = useParams();
   const id = params.id;
   useEffect(() => {
@@ -31,31 +52,38 @@ const AnsAssignmentModaldal = ({ isOpen, onClose, userId }) => {
           headers: headersAcademic,
         })
         .then((res) => {
-          console.log("modalllllllllllDataaa", res.data);
           setData(res.data);
         })
         .catch((error) => {});
     }
   }, [isOpen, userId]);
 
-  const handleFileUpload = async (files) => {
-    const base64Files = [];
+  useEffect(() => {
+    // Check if 'data' array is empty
+    if (data?.length === 0) {
+      // Trigger an error toast if the array is empty
+      toast.error("این دانش اموز پاسخی ثبت نکرده است");
+    }
+  }, [data]); // Trigger whenever the 'data' state changes
 
+  const handleFileUpload = async (files:any) => {
+    const base64Files: string[] = [];
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
       const reader = new FileReader();
-
-      reader.onload = (e) => {
-        const base64Match = e.target.result.match(/^data:(.*;base64,)?(.*)$/);
-        if (base64Match && base64Match.length >= 3) {
-          const base64WithPrefix = `data:${file.type};base64,${base64Match[2]}`;
-          base64Files.push(base64WithPrefix); // Include the prefix in the base64 string
+  
+      reader.onload = (e: ProgressEvent<FileReader>) => {
+        if (e.target && e.target.result) {
+          const base64Match = e.target.result.toString().match(/^data:(.*;base64,)?(.*)$/);
+          if (base64Match && base64Match.length >= 3) {
+            const base64WithPrefix = `data:${file.type};base64,${base64Match[2]}`;
+            base64Files.push(base64WithPrefix);
+          }
         }
       };
-
+  
       reader.readAsDataURL(file);
     }
-
     try {
       // Simulate a delay due to asynchronous file reading
       await new Promise((resolve) => setTimeout(resolve, 100));
@@ -105,6 +133,9 @@ const AnsAssignmentModaldal = ({ isOpen, onClose, userId }) => {
       )
       .then((response) => {
         console.log("Post response:", response.data);
+        if (response.data.result_type === "error") {
+          toast.error(response.data.message);
+        }
         // Handle the response as needed
       })
       .catch((error) => {
@@ -112,6 +143,55 @@ const AnsAssignmentModaldal = ({ isOpen, onClose, userId }) => {
         // Handle the error gracefully
       });
   };
+
+  // const handleSubmit = async () => {
+  //   const { description: extractedDesc, link: extractedLink } =
+  //     data && data[0]?.teacher_descs
+  //       ? extractDescriptionAndLink(data[0]?.teacher_descs)
+  //       : { description: "", link: "" };
+
+  //   let teacherDescWithFile = teacherDescription;
+  //   if (uploadedFileUrls.length > 0) {
+  //     // Add '_file_' at the beginning of each uploaded file URL and join them
+  //     const fileUrlsWithPrefix = uploadedFileUrls.map(
+  //       (url) => `_file_${url}`
+  //     );
+  //     teacherDescWithFile = `${teacherDescWithFile}_${fileUrlsWithPrefix.join("_file_")}`;
+  //   }
+
+  //   const postData = {
+  //     teacher_confirm: teacherOpinion === "خیلی خوب" ? "excellent" : teacherOpinion,
+  //     teacher_descs: teacherDescWithFile,
+  //     // Add other necessary data properties if needed
+  //   };
+
+  //   console.log(postData);
+
+  //   try {
+  //     const response = await axios.post(
+  //       `https://mohammadfarhadi.classeh.ir/api/v3/Assignmentresult/${data[0].id}`,
+  //       postData,
+  //       {
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //           Authorization: JSON.parse(userData)?.token,
+  //         },
+  //       }
+  //     );
+
+  //     console.log("Post response:", response.data);
+  //     // Handle the response as needed
+  //   } catch (error) {
+  //     console.error("Post error:", error);
+  //     // Handle the error gracefully
+  //   }
+  // };
+
+  const { description, link } =
+    data && data[0]?.teacher_descs
+      ? extractDescriptionAndLink(data[0]?.teacher_descs)
+      : { description: "", link: "" };
+
   return (
     <div
       className={`fixed inset-0 overflow-y-auto ${isOpen ? "block" : "hidden"}`}
@@ -157,7 +237,7 @@ const AnsAssignmentModaldal = ({ isOpen, onClose, userId }) => {
                 <div className="mt-4">
                   <p className="text-sm font-semibold">فایل‌ها:</p>
                   <div className="mt-2">
-                    {JSON.parse(data[0].stu_file).map((file, index) => (
+                    {JSON.parse(data[0].stu_file).map((file:any, index:any) => (
                       <a
                         key={index}
                         href={file}
@@ -174,74 +254,90 @@ const AnsAssignmentModaldal = ({ isOpen, onClose, userId }) => {
             </div>
           )}
 
-          <form>
-            {/* Radio inputs for teacher's opinion */}
-            <div className="flex items-center gap-x-2">
-              <p>نظر معلم:</p>
-              <label>
-                <input
-                  type="radio"
-                  value="خیلی خوب"
-                  onChange={(e) => setTeacherOpinion(e.target.value)}
-                  checked={teacherOpinion === "خیلی خوب"}
+          {data && data[0]?.teacher_confirm === null && (
+            <form>
+              {/* Radio inputs for teacher's opinion */}
+              <div className="flex items-center gap-x-2">
+                <p>نظر معلم:</p>
+                <label>
+                  <input
+                    type="radio"
+                    value="خیلی خوب"
+                    onChange={(e) => setTeacherOpinion(e.target.value)}
+                    checked={teacherOpinion === "خیلی خوب"}
+                  />
+                  خیلی خوب
+                </label>
+
+                <label>
+                  <input
+                    type="radio"
+                    value=" خوب"
+                    onChange={(e) => setTeacherOpinion(e.target.value)}
+                    checked={teacherOpinion === " خوب"}
+                  />
+                  خوب
+                </label>
+
+                <label>
+                  <input
+                    type="radio"
+                    value=" متوسط"
+                    onChange={(e) => setTeacherOpinion(e.target.value)}
+                    checked={teacherOpinion === " متوسط"}
+                  />
+                  متوسط
+                </label>
+
+                <label>
+                  <input
+                    type="radio"
+                    value=" ضعیف"
+                    onChange={(e) => setTeacherOpinion(e.target.value)}
+                    checked={teacherOpinion === " ضعیف"}
+                  />
+                  ضعیف
+                </label>
+                {/* Add other radio inputs similarly */}
+              </div>
+
+              {/* Text area for description */}
+              <div className="flex items-center gap-x-2 mt-4">
+                <p>توضیحات:</p>
+                <textarea
+                  value={teacherDescription}
+                  onChange={(e) => setTeacherDescription(e.target.value)}
+                  rows={4}
+                  cols={50}
                 />
-                خیلی خوب
-              </label>
+              </div>
 
-              <label>
+              {/* Input for uploading files */}
+              <div className="mt-4">
+                <p className="text-sm font-semibold">آپلود فایل:</p>
                 <input
-                  type="radio"
-                  value=" خوب"
-                  onChange={(e) => setTeacherOpinion(e.target.value)}
-                  checked={teacherOpinion === " خوب"}
+                  type="file"
+                  multiple
+                  onChange={(e) => handleFileUpload(e.target.files)}
+                  
                 />
-                خوب
-              </label>
+              </div>
+            </form>
+          )}
 
-              <label>
-                <input
-                  type="radio"
-                  value=" متوسط"
-                  onChange={(e) => setTeacherOpinion(e.target.value)}
-                  checked={teacherOpinion === " متوسط"}
-                />
-                متوسط
-              </label>
+          {data &&
+            data[0]?.teacher_confirm !== null && ( // Check if teacher_confirm is not null
+              <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                <p>نظر معلم : {data[0]?.teacher_confirm}</p>
+                <p>توضیحات معلم: {description}</p>
+                {/* Convert the extracted link to an anchor tag */}
+                {/* <a href={link} target="_blank" rel="noopener noreferrer">
+                  فایل معلم
+                </a> */}
+                <img src={link} />
+              </div>
+            )}
 
-              <label>
-                <input
-                  type="radio"
-                  value=" ضعیف"
-                  onChange={(e) => setTeacherOpinion(e.target.value)}
-                  checked={teacherOpinion === " ضعیف"}
-                />
-                ضعیف
-              </label>
-              {/* Add other radio inputs similarly */}
-            </div>
-
-            {/* Text area for description */}
-            <div className="flex items-center gap-x-2 mt-4">
-              <p>توضیحات:</p>
-              <textarea
-                value={teacherDescription}
-                onChange={(e) => setTeacherDescription(e.target.value)}
-                rows="4"
-                cols="50"
-              />
-            </div>
-
-            {/* Input for uploading files */}
-            <div className="mt-4">
-              <p className="text-sm font-semibold">آپلود فایل:</p>
-              <input
-                type="file"
-                multiple
-                onChange={(e) => handleFileUpload(e.target.files)}
-                multiple
-              />
-            </div>
-          </form>
           <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
             <button
               type="button"
@@ -252,13 +348,15 @@ const AnsAssignmentModaldal = ({ isOpen, onClose, userId }) => {
             >
               Close
             </button>
-            <button
-              type="button"
-              className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-500 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
-              onClick={handleSubmit}
-            >
-              ثبت
-            </button>
+            {data && data[0]?.teacher_confirm === null && (
+              <button
+                type="button"
+                className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-500 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
+                onClick={handleSubmit}
+              >
+                ثبت
+              </button>
+            )}
           </div>
         </div>
       </div>

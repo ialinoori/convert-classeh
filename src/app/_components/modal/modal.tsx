@@ -1,12 +1,12 @@
 "use client";
 import { useState } from "react";
 
-const Modal = ({ isOpen, onClose, users, setSelectedUsers, selectedUsers }) => {
-  const handleCheckboxChange = (userId) => {
-    setSelectedUsers((prevSelectedUsers) => {
+const Modal = ({ isOpen, onClose, users, setSelectedUsers, selectedUsers }:any) => {
+  const handleCheckboxChange = (userId:any) => {
+    setSelectedUsers((prevSelectedUsers:any) => {
       if (prevSelectedUsers.includes(userId)) {
         // If user is already selected, remove them
-        return prevSelectedUsers.filter((id) => id !== userId);
+        return prevSelectedUsers.filter((id:any) => id !== userId);
       } else {
         // If user is not selected, add them
         return [...prevSelectedUsers, userId];
@@ -33,7 +33,7 @@ const Modal = ({ isOpen, onClose, users, setSelectedUsers, selectedUsers }) => {
         <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
           <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
             {/* Display the list of users with checkboxes */}
-            {users.map((user) => (
+            {users.map((user:any) => (
               <div key={user.id} className="flex items-center mb-2">
                 <input
                   type="checkbox"

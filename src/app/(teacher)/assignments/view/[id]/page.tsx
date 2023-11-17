@@ -5,19 +5,21 @@ import React, { useEffect, useState } from "react";
 import moment from "moment-jalaali"; // Correct import for moment-jalaali
 import AnsAssignmentModaldal from "../../../_components/AnsAssignmentModal/AnsAssignmentModal";
 
-const page = () => {
+const View = () => {
   const params = useParams();
   const id = params.id;
-  const userData = localStorage.getItem("userData");
-  const [assignmentData, setAssignmentData] = useState(null); // State to store fetched assignment data
+  
+  const [assignmentData, setAssignmentData] = useState<any>(null); // State to store fetched assignment data
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState(null);
 
 
+  useEffect(() => {
+    const userData = localStorage.getItem("userData") as string;
+    
   const headersAcademic = {
     Authorization: JSON.parse(userData).token,
   };
-  useEffect(() => {
     var url = `/api/v3/assignment?$filter={"eq":{"id":${id}}}&$join=user,users,course_classs,course_classs.course,course_classs.school_class,course_classs.school_class.users&$select=title,jc_create_time,description,due_time,type,file,course_classs.school_class.title,course_classs.course.title,users.first_name,users.last_name,course_classs.school_class.users.first_name,course_classs.school_class.users.last_name`;
     axios
       .get(`https://mohammadfarhadi.classeh.ir/${url}`, {
@@ -31,7 +33,7 @@ const page = () => {
 
   console.log(assignmentData);
 
-  const handleClickOpen = (userId) => {
+  const handleClickOpen = (userId:any) => {
     setSelectedUserId(userId); // Set the selected user ID
 
     
@@ -89,8 +91,8 @@ const page = () => {
         </div>
       </div>
       <div className="mt-12  mx-auto w-[60%]">
-        {assignmentData?.users.map((user) => (
-          <div className="bg-white shadow-lg border-b-2 border-slate-400 p-2 rounded flex items-center justify-between">
+        {assignmentData?.users.map((user:any) => (
+          <div key={user.id} className="bg-white shadow-lg border-b-2 border-slate-400 p-2 rounded flex items-center justify-between">
             <div className="flex flex-row-reverse items-center gap-x-2">
               {" "}
               <p>{user.first_name}</p> <p>{user.last_name}</p>
@@ -109,4 +111,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default View;

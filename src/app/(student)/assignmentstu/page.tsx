@@ -9,14 +9,14 @@ const mockAssignMnet = [
   { id: 2, lesson: "کلاس دو", title: "عنوان تکلیف ", Adddate: "1402/10/13" },
 ];
 
-const page = () => {
+const AssignmentStu = () => {
   const [assignments, setAssignments] = React.useState([]);
 
-  const now = parseInt(Date.now() / 1000);
+  const now = (Date.now() / 1000) as number
   const time = now;
 
   useEffect(() => {
-    const userData = localStorage.getItem("userData");
+    const userData = localStorage.getItem("userData") as string;
     const headersAcademic = {
       Authorization: JSON.parse(userData).token,
     };
@@ -34,16 +34,19 @@ const page = () => {
       })
       .catch((error) => {});
   }, []);
+
+  console.log(assignments);
+  
   return (
     <div className="container my-12">
-      {assignments.map((assignment) => (
+      {assignments.map((assignment:any) => (
         <div
           key={assignment.id}
           className="bg-white mb-4 mx-auto w-[60%] shadow-md rounded-lg p-4"
         >
           <p>حل تکلیف (تکلیف: {assignment.title})</p>
           {/* Mapping over classes within each assignment */}
-          {assignment.course_classs.map((courseClass, index) => (
+          {assignment.course_classs.map((courseClass:any, index:any) => (
             <div
               key={index}
               className="bg-white mb-4 mx-auto w-[60%] shadow-md rounded-lg p-4"
@@ -65,4 +68,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default AssignmentStu;

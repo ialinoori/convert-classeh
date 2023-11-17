@@ -4,7 +4,7 @@ import axios from "axios";
 import { useState } from "react";
 import toast from "react-hot-toast";
 
-const AnswerModal = ({ isOpen, onClose, id }) => {
+const AnswerModal = ({ isOpen, onClose, id }:any) => {
   const [confirmation, setConfirmation] = useState("");
   const [duration, setDuration] = useState("");
   const [description, setDescription] = useState("");
@@ -12,7 +12,7 @@ const AnswerModal = ({ isOpen, onClose, id }) => {
 
   const [isNotCompleted, setIsNotCompleted] = useState(false);
 
-  const handleConfirmationChange = (e) => {
+  const handleConfirmationChange = (e:any) => {
     setConfirmation(e.target.value);
     if (e.target.value === "انجام نشد") {
       setIsNotCompleted(true);
@@ -21,31 +21,36 @@ const AnswerModal = ({ isOpen, onClose, id }) => {
     }
   };
 
-  const handleDurationChange = (e) => {
+  const handleDurationChange = (e:any) => {
     setDuration(e.target.value);
   };
 
-  const handleDescriptionChange = (e) => {
+  const handleDescriptionChange = (e:any) => {
     setDescription(e.target.value);
   };
 
   const userData = localStorage.getItem("userData");
 
-  const handleFileUpload = async (files) => {
-    const base64Files = [];
+  const token = userData ? JSON.parse(userData)?.token : null;
+
+
+  const handleFileUpload = async (files:any) => {
+    const base64Files: string[] = [];
 
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
       const reader = new FileReader();
-
-      reader.onload = (e) => {
-        const base64Match = e.target.result.match(/^data:(.*;base64,)?(.*)$/);
-        if (base64Match && base64Match.length >= 3) {
-          const base64WithPrefix = `data:${file.type};base64,${base64Match[2]}`;
-          base64Files.push(base64WithPrefix); // Include the prefix in the base64 string
+  
+      reader.onload = (e: ProgressEvent<FileReader>) => {
+        if (e.target && e.target.result) {
+          const base64Match = e.target.result.toString().match(/^data:(.*;base64,)?(.*)$/);
+          if (base64Match && base64Match.length >= 3) {
+            const base64WithPrefix = `data:${file.type};base64,${base64Match[2]}`;
+            base64Files.push(base64WithPrefix);
+          }
         }
       };
-
+  
       reader.readAsDataURL(file);
     }
 
@@ -63,7 +68,7 @@ const AnswerModal = ({ isOpen, onClose, id }) => {
         formData,
         {
           headers: {
-            Authorization: JSON.parse(userData)?.token,
+            Authorization: token,
           },
         }
       );
@@ -80,7 +85,7 @@ const AnswerModal = ({ isOpen, onClose, id }) => {
 
   const handleSubmit = async () => {
     // Define time mappings for duration options
-    const timeMappings = {
+    const timeMappings :any = {
       "15min": 15,
       "30min": 30,
       "45min": 45,
@@ -111,7 +116,7 @@ const AnswerModal = ({ isOpen, onClose, id }) => {
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization: JSON.parse(userData)?.token,
+            Authorization: token,
           },
         }
       );
@@ -256,7 +261,7 @@ const AnswerModal = ({ isOpen, onClose, id }) => {
                 value={description}
                 onChange={handleDescriptionChange}
                 className="block w-full rounded-md border border-gray-300 px-3 py-2 mt-1"
-                rows="4"
+                
                 placeholder="توضیحات خود را وارد کنید..."
               ></textarea>
             </label>

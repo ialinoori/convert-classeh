@@ -5,16 +5,17 @@ import React, { useEffect } from "react";
 import moment from "moment-jalaali"; // Correct import for moment-jalaali
 
 
-const page = () => {
-  const [assignments, setAssignments] = React.useState([]);
+const Assignment = () => {
+  const [assignments, setAssignments] = React.useState<any>([]);
 
-  const now = parseInt(Date.now() / 1000);
+  const now = (Date.now() / 1000) as number
   const time = now;
-  const userData = localStorage.getItem("userData");
-  const headersAcademic = {
-    Authorization: JSON.parse(userData).token,
-  };
+ 
   useEffect(() => {
+    const userData = localStorage.getItem("userData") as string;
+    const headersAcademic = {
+      Authorization: JSON.parse(userData).token,
+    };
     const url = `api/v3/assignment?$filter={"andX": [{"eq":{"jc_status": "1"}},{"andX":[{"eq":{"course_classs.user.id":${1563}}},{"andX":[{"gt":{"course_classs.school_class.academic_year.end_date":"${time}"}},{"lt":{"course_classs.school_class.academic_year.start_date":"${time}"}}]}]}]}&$join=user,users,course_classs,course_classs.course,course_classs.user,course_classs.school_class,course_classs.school_class.academic_year&$orderby=jc_create_time&$ordertype=desc&$select=type,title,jc_create_time,course_classs.school_class.title,course_classs.course.title,due_time`;
     axios
       .get(`https://mohammadfarhadi.classeh.ir/${url}`, {
@@ -28,14 +29,14 @@ const page = () => {
   }, []);
   return (
     <div>
-      {assignments.map((assignment) => (
+      {assignments.map((assignment:any) => (
         <div
           key={assignment.id}
           className="bg-white mb-4 mx-auto w-[60%] shadow-md rounded-lg p-4"
         >
           <p>حل تکلیف (تکلیف: {assignment.title})</p>
           {/* Mapping over classes within each assignment */}
-          {assignment.course_classs.map((courseClass, index) => (
+          {assignment.course_classs.map((courseClass:any, index:any) => (
             <div
               key={index}
               className="bg-white mb-4 mx-auto w-[60%] shadow-md rounded-lg p-4"
@@ -67,4 +68,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Assignment;
