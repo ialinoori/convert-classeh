@@ -8,8 +8,7 @@ import createAccount from "./actions";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
-import Cookies from 'js-cookie';
-
+import Cookies from "js-cookie";
 
 const LoginPage = () => {
   const router = useRouter();
@@ -21,10 +20,9 @@ const LoginPage = () => {
   const [usernameError, setUsernameError] = useState("");
   const { username, password } = formData;
 
+  
   const search = useSearchParams();
   const appName = search.get("AppName") ?? "";
-
-  console.log(appName);
 
   const handleInputChange = (e: any) => {
     const { name, value } = e.target;
@@ -58,27 +56,23 @@ const LoginPage = () => {
 
       console.log(responseData);
 
-      if(responseData.result_type === "success"){
-        toast.success(responseData.message)
-        Cookies.set('token', responseData.data.token, { expires: 7 }); 
-        localStorage.setItem("userData",JSON.stringify(responseData.data))
-        router.push("/createassignment")
+      if (responseData.result_type === "success") {
+        toast.success(responseData.message);
+        Cookies.set("token", responseData.data.token, { expires: 7 });
+        localStorage.setItem("userData", JSON.stringify(responseData.data));
 
-      }else{
-        toast.error(responseData.message)
+        // Storing appName in localStorage
+        localStorage.setItem("CONFIG", appName);
+
+        router.push("/dashboard");
+      } else {
+        toast.error(responseData.message);
       }
-      
-
-    
     } catch (error) {
       console.error("Error during login:", error);
       toast.error("An unexpected error occurred. Please try again.");
     }
   };
-
-
-
-
 
   return (
     <div className="flex justify-center items-center h-screen">
@@ -94,7 +88,7 @@ const LoginPage = () => {
           ورود به مدرسه منتخب
         </h1>
 
-        <form  onSubmit={handleFormSubmit}>
+        <form onSubmit={handleFormSubmit}>
           <div className="w-full py-2 flex items-center justify-center">
             <div className="flex flex-col gap-y-6">
               <Input

@@ -4,7 +4,7 @@ import axios from "axios";
 import { useState } from "react";
 import toast from "react-hot-toast";
 
-const AnswerModal = ({ isOpen, onClose, id }:any) => {
+const AnswerModal = ({ isOpen, onClose, id }: any) => {
   const [confirmation, setConfirmation] = useState("");
   const [duration, setDuration] = useState("");
   const [description, setDescription] = useState("");
@@ -12,7 +12,7 @@ const AnswerModal = ({ isOpen, onClose, id }:any) => {
 
   const [isNotCompleted, setIsNotCompleted] = useState(false);
 
-  const handleConfirmationChange = (e:any) => {
+  const handleConfirmationChange = (e: any) => {
     setConfirmation(e.target.value);
     if (e.target.value === "انجام نشد") {
       setIsNotCompleted(true);
@@ -21,36 +21,39 @@ const AnswerModal = ({ isOpen, onClose, id }:any) => {
     }
   };
 
-  const handleDurationChange = (e:any) => {
+  const handleDurationChange = (e: any) => {
     setDuration(e.target.value);
   };
 
-  const handleDescriptionChange = (e:any) => {
+  const handleDescriptionChange = (e: any) => {
     setDescription(e.target.value);
   };
 
   const userData = localStorage.getItem("userData");
 
   const token = userData ? JSON.parse(userData)?.token : null;
+  const host = localStorage.getItem("CONFIG") as string;
+  const id_user = userData ? JSON.parse(userData)?.id : null;
 
-
-  const handleFileUpload = async (files:any) => {
+  const handleFileUpload = async (files: any) => {
     const base64Files: string[] = [];
 
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
       const reader = new FileReader();
-  
+
       reader.onload = (e: ProgressEvent<FileReader>) => {
         if (e.target && e.target.result) {
-          const base64Match = e.target.result.toString().match(/^data:(.*;base64,)?(.*)$/);
+          const base64Match = e.target.result
+            .toString()
+            .match(/^data:(.*;base64,)?(.*)$/);
           if (base64Match && base64Match.length >= 3) {
             const base64WithPrefix = `data:${file.type};base64,${base64Match[2]}`;
             base64Files.push(base64WithPrefix);
           }
         }
       };
-  
+
       reader.readAsDataURL(file);
     }
 
@@ -64,7 +67,7 @@ const AnswerModal = ({ isOpen, onClose, id }:any) => {
 
       // Call your API endpoint here with formData
       const response = await axios.post(
-        "https://mohammadfarhadi.classeh.ir//schoolservice/addMultiImage",
+        `https://${host}//schoolservice/addMultiImage`,
         formData,
         {
           headers: {
@@ -75,17 +78,13 @@ const AnswerModal = ({ isOpen, onClose, id }:any) => {
 
       console.log("Upload response:", response.data);
       setUploadedFileUrls(response.data);
-      // Handle the response as needed
     } catch (error) {
       console.error("Upload error:", error);
-
-      // Handle the error gracefully
     }
   };
 
   const handleSubmit = async () => {
-    // Define time mappings for duration options
-    const timeMappings :any = {
+    const timeMappings: any = {
       "15min": 15,
       "30min": 30,
       "45min": 45,
@@ -93,18 +92,16 @@ const AnswerModal = ({ isOpen, onClose, id }:any) => {
       over60min: 100,
     };
 
-    // Map the selected duration option to its time value
     const assTime = timeMappings[duration];
 
-    // Prepare the data object
     const data = {
       stu_confirm: confirmation,
       ass_time: assTime?.toString() ? assTime?.toString() : "",
       stu_descs: description,
       stu_file: JSON.stringify(uploadedFileUrls),
-      assignment: { id: id }, // Replace with the appropriate assignment ID
-      id: id, // Replace with the appropriate ID for stu_conf
-      user: { id: 1564 }, // Replace with the appropriate user ID
+      assignment: { id: id },
+      id: id,
+      user: { id: id_user },
     };
 
     console.log("Data:", data);
@@ -261,7 +258,6 @@ const AnswerModal = ({ isOpen, onClose, id }:any) => {
                 value={description}
                 onChange={handleDescriptionChange}
                 className="block w-full rounded-md border border-gray-300 px-3 py-2 mt-1"
-                
                 placeholder="توضیحات خود را وارد کنید..."
               ></textarea>
             </label>

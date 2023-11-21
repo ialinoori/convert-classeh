@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import "../globals.css";
+import "../../../src/app/globals.css";
 import Footer from "../_components/footer/footer";
 import { Toaster } from "react-hot-toast";
 

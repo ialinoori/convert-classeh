@@ -100,6 +100,7 @@
 body:lang(fa-IR) {
 	font-family: IRANSansX, tahoma, Segoe UI, Roboto, Oxygen, Helvetica Neue, sans-serif !important;
 	direction: rtl;
+	background-color: #fafafa;
 }
 
 h1:lang(fa-IR),
@@ -117,16 +118,11 @@ h1:lang(fa-IR) {
 	font-weight: bold;
 }
 
-:lang(fa){
-  font-family: 
-
-}
 
 
 
-:lang(en){
-  font-family: var(--font-figtree);
-}
+
+
 
 .modal {
   position: fixed;
@@ -223,6 +219,11 @@ h1:lang(fa-IR) {
   z-index: 1111;
 
 }
+
+
+.gradient-bg {
+	background-image: linear-gradient(to right, #e60c0c, #000000);
+  }
 
 
 

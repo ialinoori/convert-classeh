@@ -26,3 +26,57 @@ const Page = () => {
 };
 
 export default Page;
+
+
+// "use client";
+
+// import Link from "next/link";
+// import React, { useEffect, useState } from "react";
+
+// interface Role {
+//   discr: string;
+//   en_title: string;
+//   fa_title: string;
+//   id: number;
+// }
+
+// const Page = () => {
+//   const [userData, setUserData] = useState<string>("");
+
+//   useEffect(() => {
+//     if (!userData) {
+//       setUserData(localStorage.getItem("userData") || "");
+//     }
+//   }, []);
+
+//   const roles: Role[] | null = userData ? JSON.parse(userData)?.roles : null;
+
+//   const determineHref = () => {
+//     if (roles) {
+//       const userRole = roles.find((role: Role) => role.en_title === "student");
+//       if (userRole) {
+//         return "/assignmentstu";
+//       } else {
+//         return "/assignments";
+//       }
+//     }
+//     return "/";
+//   };
+
+//   return (
+//     <div className="container my-32">
+//       <div className="">
+//         <Link href={determineHref()}>
+//           <button className="bg-green-500 rounded-md p-4">
+//             {roles && roles.find((role: Role) => role.en_title === "student")
+//               ? "تکالیف دانش‌آموز"
+//               : "تکالیف معلم"}
+//           </button>
+//         </Link>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default Page;
+
